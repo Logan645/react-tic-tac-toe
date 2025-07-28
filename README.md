@@ -1,70 +1,164 @@
-# Getting Started with Create React App
+# 🎮 React Tic-Tac-Toe Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A classic Tic-Tac-Toe game built with React and TypeScript, designed for learning React fundamentals.
 
-## Available Scripts
+![React](https://img.shields.io/badge/React-18.0.0-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0.0-blue?logo=typescript)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+- 🎯 **Classic Gameplay**：Complete Tic-Tac-Toe game logic
+- 🏆 **Win Detection**：Automatically detects wins in rows, columns, and diagonals
+- 🤝 **Draw Detection**：Detects when the game ends in a tie
+- 🎨 **Dark Mode**：Toggle between light and dark themes
+- 💾 **Theme Persistence**：Your theme choice is automatically saved
+- 📱 **Responsive Design**：Works on all screen sizes
+- ⚡ **Visual Feedback**：Highlights winning combinations
+- 🔄 **Game Reset**：One-click game restart
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🛠️ Tech Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React 18** - Modern React framework
+- **TypeScript** - Type-safe JavaScript
+- **CSS3** - Modern styling and animations
+- **LocalStorage** - Local data persistence
+- **React Hooks** - useState, useEffect
 
-### `npm test`
+## 🚀 Quick Start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- Node.js (version 14.0.0 or higher)
+- npm or yarn
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**
+```bash
+git clone https://github.com/Logan645/react-tic-tac-toe.git
+cd react-tic-tac-toe
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-### `npm run eject`
+3. **Start the development server**
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **Open your browser**
+Visit [http://localhost:3000](http://localhost:3000) to start playing!
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🎮 How to Play
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Start Game**：Player X goes first
+2. **Take Turns**：Click on empty squares to place X or O
+3. **Win Condition**：Get three in a row (horizontal, vertical, or diagonal)
+4. **Restart**：Click the "Reset Game" button
+5. **Switch Theme**：Click the sun/moon icon in the top right
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📚 Learning Focus
 
-## Learn More
+This project covers core React concepts:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 🎯 React Basics
+- **Component Development**：Function components vs class components
+- **State Management**：Using useState Hook
+- **Event Handling**：Click events and state updates
+- **Conditional Rendering**：Showing different content based on state
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 🔧 React Hooks
+- **useState**：Managing component state
+- **useEffect**：Handling side effects and lifecycle
+- **Custom Hooks**：Logic reuse
 
-### Code Splitting
+### 🎨 Styling and Interaction
+- **CSS Modularity**：Component style management
+- **Animations**：CSS animations and transitions
+- **Responsive Design**：Adapting to different devices
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 🔄 State Management
+- **Immutability**：Correct ways to update state
+- **State Lifting**：Sharing state between components
+- **Local Storage**：Data persistence
 
-### Analyzing the Bundle Size
+## 🏗️ Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```
+src/
+├── index.tsx          # Main entry file
+├── index.css          # Global styles
+├── components/        # Components directory (expandable)
+└── types/            # TypeScript type definitions (expandable)
+```
 
-### Making a Progressive Web App
+## 🎯 Key Code Examples
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### State Management
+```typescript
+const [gameState, setGameState] = useState<GameState>({
+  squares: Array(9).fill(null),
+  xIsNext: true,
+  winner: null,
+  gameOver: false,
+  winningLine: null,
+});
+```
 
-### Advanced Configuration
+### Side Effects
+```typescript
+useEffect(() => {
+  if (isDarkMode) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+  localStorage.setItem('tictactoe-theme', isDarkMode ? 'dark' : 'light');
+}, [isDarkMode]);
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🚀 Future Enhancements
 
-### Deployment
+This project can be extended with:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- [ ] **Game History**：Record each move
+- [ ] **Undo Feature**：Go back to previous moves
+- [ ] **Score System**：Track win/loss statistics
+- [ ] **Sound Effects**：Add game sounds
+- [ ] **AI Opponent**：Simple AI algorithm
+- [ ] **Multiplayer**：Online gameplay
 
-### `npm run build` fails to minify
+## 🤝 Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Issues and Pull Requests are welcome!
+
+1. Fork this project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Logan Liao**
+
+- GitHub: [@Logan645](https://github.com/Logan645)
+- Project Link: [https://github.com/Logan645/react-tic-tac-toe](https://github.com/Logan645/react-tic-tac-toe)
+
+## 🙏 Acknowledgments
+
+- [React Documentation](https://reactjs.org/)
+- [Create React App](https://github.com/facebook/create-react-app)
+- [TypeScript Documentation](https://www.typescriptlang.org/)
+
+---
+
+⭐ If this project helps you, please give it a star!
