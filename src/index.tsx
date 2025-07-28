@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
@@ -18,20 +18,48 @@ interface WinnerResult {
 }
 
 // 遊戲組件
-class TicTacToe extends React.Component<{}, GameState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: true,
-      winner: null,
-      gameOver: false,
-      winningLine: null,
-    };
-  }
+const TicTacToe: React.FC = () => {
+  // 遊戲狀態
+  const [gameState, setGameState] = useState<GameState>({
+    squares: Array(9).fill(null),
+    xIsNext: true,
+    winner: null,
+    gameOver: false,
+    winningLine: null,
+  });
+
+  // 黑夜模式狀態
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  // 組件掛載時，從本地存儲恢復主題設置
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('tictactoe-theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    }
+  }, []);
+
+  // 當主題改變時，更新 CSS 類名和本地存儲
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // 保存主題設置到本地存儲
+    localStorage.setItem('tictactoe-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  // 當有勝利者時，顯示祝賀訊息
+  useEffect(() => {
+    if (gameState.winner) {
+      console.log(`🎉 恭喜 ${gameState.winner} 獲勝！`);
+    }
+  }, [gameState.winner]);
 
   // 計算勝利者
-  calculateWinner(squares: (string | null)[]): WinnerResult {
+  const calculateWinner = (squares: (string | null)[]): WinnerResult => {
     const lines: number[][] = [
       [0, 1, 2],
       [3, 4, 5],
@@ -54,66 +82,72 @@ class TicTacToe extends React.Component<{}, GameState> {
       }
     }
     return { winner: null, line: null };
-  }
+  };
 
   // 檢查是否平局
-  isDraw(squares: (string | null)[]): boolean {
+  const isDraw = (squares: (string | null)[]): boolean => {
     return squares.every((square) => square !== null);
-  }
+  };
 
   // 處理點擊事件
-  handleClick(i: number): void {
-    const squares = this.state.squares.slice();
+  const handleClick = (i: number): void => {
+    const squares = gameState.squares.slice();
 
     // 如果已經有勝利者或者格子已經被佔用，則不允許點擊
-    if (this.state.winner || squares[i] || this.state.gameOver) {
+    if (gameState.winner || squares[i] || gameState.gameOver) {
       return;
     }
 
-    squares[i] = this.state.xIsNext ? "X" : "O";
-    const result = this.calculateWinner(squares);
-    const gameOver = result.winner? true : false || this.isDraw(squares);
+    squares[i] = gameState.xIsNext ? "X" : "O";
+    const result = calculateWinner(squares);
+    const gameOver = result.winner ? true : false || isDraw(squares);
 
-    this.setState({
+    setGameState({
       squares: squares,
-      xIsNext: !this.state.xIsNext,
+      xIsNext: !gameState.xIsNext,
       winner: result.winner,
       gameOver: gameOver,
       winningLine: result.line,
     });
-  }
+  };
 
   // 重新開始遊戲
-  resetGame(): void {
-    this.setState({
+  const resetGame = (): void => {
+    setGameState({
       squares: Array(9).fill(null),
       xIsNext: true,
       winner: null,
       gameOver: false,
       winningLine: null,
     });
-  }
+  };
+
+  // 切換黑夜模式
+  const toggleDarkMode = (): void => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   // 渲染單個格子
-  renderSquare(i: number): React.ReactElement {
+  const renderSquare = (i: number): React.ReactElement => {
     const isWinningSquare =
-      this.state.winningLine && this.state.winningLine.includes(i);
+      gameState.winningLine && gameState.winningLine.includes(i);
     return (
       <button
         className={`square ${isWinningSquare ? "winner" : ""}`}
-        onClick={() => this.handleClick(i)}
+        onClick={() => handleClick(i)}
       >
-        {this.state.squares[i]}
+        {gameState.squares[i]}
       </button>
     );
-  }
+  };
 
-  initBoardRows(): React.ReactElement[] {
+  // 初始化棋盤行
+  const initBoardRows = (): React.ReactElement[] => {
     const boardRows = [];
     for (let i = 0; i < 3; i++) {
       const row = [];
       for (let j = 0; j < 3; j++) {
-        row.push(this.renderSquare(i * 3 + j));
+        row.push(renderSquare(i * 3 + j));
       }
       boardRows.push(
         <div key={i} className="board-row">
@@ -122,12 +156,13 @@ class TicTacToe extends React.Component<{}, GameState> {
       );
     }
     return boardRows;
-  }
+  };
 
-  getGameStatus(): string {
-    const winner = this.state.winner;
-    const gameOver = this.state.gameOver;
-    const xIsNext = this.state.xIsNext;
+  // 獲取遊戲狀態
+  const getGameStatus = (): string => {
+    const winner = gameState.winner;
+    const gameOver = gameState.gameOver;
+    const xIsNext = gameState.xIsNext;
 
     if (winner) {
       return `🎉 獲勝者: ${winner} 🎉`;
@@ -136,25 +171,31 @@ class TicTacToe extends React.Component<{}, GameState> {
     } else {
       return `👤 下一個玩家: ${xIsNext ? "X" : "O"}`;
     }
-  }
+  };
 
-  render(): React.ReactElement {
-    return (
-      <div className="game">
+  return (
+    <div className="game">
+      <div className="header">
         <h1 className="game-title">🎮 圈圈叉叉遊戲</h1>
-        <div className="game-info">
-          <div className="status">{this.getGameStatus()}</div>
-          <button className="reset-button" onClick={() => this.resetGame()}>
-            🔄 重新開始
-          </button>
-        </div>
-        <div className="game-board">
-          {this.initBoardRows()}
-        </div>
+        <button 
+          className={`theme-toggle ${isDarkMode ? 'dark' : 'light'}`}
+          onClick={toggleDarkMode}
+        >
+          {isDarkMode ? '☀️' : '🌙'}
+        </button>
       </div>
-    );
-  }
-}
+      <div className="game-info">
+        <div className="status">{getGameStatus()}</div>
+        <button className="reset-button" onClick={resetGame}>
+          🔄 重新開始
+        </button>
+      </div>
+      <div className="game-board">
+        {initBoardRows()}
+      </div>
+    </div>
+  );
+};
 
 // 渲染應用
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
